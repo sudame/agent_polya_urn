@@ -30,8 +30,8 @@ func (from *Agent) interact(s func(*Agent) []*Agent) (*Agent, *Agent) {
 	fromMb := make([]*Agent, 0)
 	toMb := make([]*Agent, 0)
 
-	// cleaning memory buffer
-	// if memory buffer has the opponent, remove it
+	// fill memory buffer with strategy s.
+	// tips: if memory buffer has the opponent, remove it.
 	for _, a := range s(from) {
 		if a.Id != to.Id {
 			fromMb = append(fromMb, a)
