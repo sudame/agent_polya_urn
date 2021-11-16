@@ -4,14 +4,18 @@ import (
 	"flag"
 	"fmt"
 	"math/rand"
+	"os"
 
 	"github.com/cheggaaa/pb/v3"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var events = make([]Event, 0)
 
 var agents = make([]*Agent, 0)
 
+// drip active (= has more than 0 agents in the urn) agents
+// from the environment
 func activeAgents() []*Agent {
 	ret := make([]*Agent, 0)
 	for _, a := range agents {
@@ -22,6 +26,7 @@ func activeAgents() []*Agent {
 	return ret
 }
 
+// add agents to environment
 func addAgents() *Agent {
 	a := Agent{
 		Id: len(agents),
@@ -30,6 +35,7 @@ func addAgents() *Agent {
 	return &a
 }
 
+// setup initial 2 agents
 func setupAgents() {
 	// create initial 2 agents
 	a := addAgents()
@@ -53,7 +59,8 @@ func pickRandomActiveAgents() *Agent {
 	return u[i]
 }
 
-func setupExperiment() {
+// read CLI arguments and set global vars
+func parseArgs() {
 	var (
 		_rho  = flag.Int("rho", 1, "ρ")
 		_nu   = flag.Int("nu", 1, "ν")
@@ -67,11 +74,12 @@ func setupExperiment() {
 }
 
 func main() {
-	setupExperiment()
+	// prepare
+	parseArgs()
 	setupAgents()
 
+	// main experiment
 	bar := pb.StartNew(iter)
-
 	for i := 0; i < iter; i++ {
 		from := pickRandomActiveAgents()
 		_, to := from.interact(ssw)
@@ -80,9 +88,12 @@ func main() {
 
 		bar.Increment()
 	}
-
 	bar.Finish()
 
-	dumpEventLog(fmt.Sprintf("result/event__rho%d_nu%d_iter%d", rho, nu, iter))
-	dumpAgents(fmt.Sprintf("result/agents__rho%d_nu%d_iter%d", rho, nu, iter))
+	// dump result
+	os.Mkdir("result", os.ModePerm)
+	dumpEventLog(fmt.Sprintf("result/event__rho%d_nu%d_iter%d.dat", rho, nu, iter))
+	dumpAgents(fmt.Sprintf("result/agents__rho%d_nu%d_iter%d.dat", rho, nu, iter))
+	aggEdges(fmt.Sprintf("result/edges__rho%d_nu%d_iter%d.csv", rho, nu, iter))
+	aggNodes(fmt.Sprintf("result/nodes__rho%d_nu%d_iter%d.csv", rho, nu, iter))
 }

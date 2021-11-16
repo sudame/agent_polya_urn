@@ -10,6 +10,7 @@ type Agent struct {
 	Urn []*Agent
 }
 
+// for debug
 func (a *Agent) String() string {
 	str := fmt.Sprintf("{ Id: %d, Urn: [", a.Id)
 	for _, c := range a.Urn {
@@ -19,6 +20,7 @@ func (a *Agent) String() string {
 	return str
 }
 
+// core of agents behavior. the from-agent and to-agent will interact with strategy s
 func (from *Agent) interact(s func(*Agent) []*Agent) (*Agent, *Agent) {
 	// pick opponent agent from to-agent's urn
 	i := rand.Intn(len(from.Urn))
