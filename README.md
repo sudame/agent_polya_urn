@@ -4,6 +4,8 @@
   - memo: on Windows, we use [mingw-w64](https://winlibs.com/) for gcc
 
 ## How to run
+Results will store in `result` directory
+
 ### TL;DR
 ```sh
 go run .
