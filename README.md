@@ -1,6 +1,6 @@
 ## Requirements
 - Go (1.17 or later)
-- gco (code depends on cgo, which require gcc)
+- gcc (code depends on [cgo](https://go.dev/blog/cgo), which require gcc)
   - memo: on Windows, we use [mingw-w64](https://winlibs.com/) for gcc
 
 ## How to run
